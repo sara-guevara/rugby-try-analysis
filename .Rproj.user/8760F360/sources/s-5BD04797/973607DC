@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1587023775207.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3916700147",
+    "id" : "973607DC",
+    "lastKnownWriteTime" : 1587023851,
+    "last_content_update" : 1587023851351,
+    "path" : "H:/repos/rugby-try-analysis/Rugby_Analysis.Rmd",
+    "project_path" : "Rugby_Analysis.Rmd",
+    "properties" : {
+        "cursorPosition" : "13,149",
+        "scrollLine" : "0",
+        "tempName" : "Untitled2"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
