@@ -5,11 +5,16 @@ date: "16/04/2020"
 output: pdf_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
 ## Step 1
 
 Loading tidyverse
 
-```{r packages, echo= FALSE}
+```{r packages, eval= TRUE}
 library(tidyverse)
 
 ```
