@@ -1,0 +1,201 @@
+---
+title: "Wk 6. Tidying, transforming & Combining data"
+author: "Sara G"
+date: "25 March 2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Step 1
+
+Loading tidyverse
+
+```{r packages, echo= FALSE}
+library(tidyverse)
+
+```
+
+## Step 2
+
+Unzipping and reading in the data file.
+Calling the data file Sprint
+
+```{r read_data, message=TRUE} 
+unzip("data.zip")
+sprint <- read.csv("data/sprint-testing-data.csv")
+```
+
+## Step 3
+
+Check the structure of the data file using `str()`:
+
+```{r structure, results='hide'}   
+str(sprint)
+
+```
+
+## Step 4
+
+First 6 rows
+
+```{r head}
+knitr::kable(head(sprint))
+```
+
+Last 6 rows
+
+```{r tail}
+knitr::kable(tail(sprint))
+```
+
+## Step 5
+
+Write code to determine how many na's there are and where they are.
+
+
+```{r na}
+sum(is.na(sprint))
+which(is.na(sprint), arr.ind = TRUE)
+```
+
+## Step 6
+
+visualising the missing values
+
+```{r na visualisation}
+library(naniar)
+naniar::vis_miss(sprint) #producing normal visualisation of missing data. Needed to 
+```
+
+## Step 7
+
+*What does tidyverse tidy data look like?*
+
+The Observations are all put on different rows, and all the variables are put in different columns and the data for each is in a separate column
+
+## Step 8
+
+Converting sprint data from wide to long format
+
+```{r long}
+sprint_long <- pivot_longer(data = sprint,  #changing wide to long format
+             cols = -c(athlete),  # leave this column as is
+             names_to = "time_point",  # new column, now 'key' column name
+             values_to = "sprint_time") # new 'value' column name
+sprint_long
+```
+
+## Step 9
+
+Split the variable time_point into:
+
+- testing_session
+- trial
+
+
+```{r separating sprint variables}
+sprint_long <- separate(data = sprint_long,
+                        col = time_point,   # column to split
+                        into = c("testing_session", "trial"))   # new column names
+head(sprint_long)
+```
+
+## Step 10
+
+Identify where the missing data is with the modified data output
+
+```{r na}
+sum(is.na(sprint_long))
+which(is.na(sprint_long), arr.ind = TRUE)
+```
+
+## Step 11
+
+Convert na's from explicit to implicit
+
+```{r implicit na}
+sprint_tidy <- drop_na(sprint_long) #drop_na makes explicit data implicit
+sprint_tidy
+```
+
+## Step 12
+
+```{r sprint summary}
+library(dplyr)
+sprint_summary <-
+  sprint_tidy %>%
+   group_by(athlete, testing_session) %>%  # don't put "&", just put the "comma" and it will group by both 
+  summarise(mean_time = round(mean(sprint_time), 2), #round() nestle this argument around the other to help reduce decimal points
+            best_time = min(sprint_time))
+
+knitr::kable(head(sprint_summary))
+```
+
+## Step 13
+
+```{r wider}
+sprint_tider <- pivot_wider(data = sprint_summary,
+                            names_from = testing_session,
+                            values_from = c(mean_time, best_time))  # or use mean_time:best_time, then don't need c()
+knitr::kable(head(sprint_tider))
+```
+
+## Step 14
+
+```{r ordering}
+sprint_summary <- select (sprint_tider, "athlete", "mean_time_pre", "best_time_pre", "mean_time_post", "best_time_post")   # use select to order variables.
+sprint_summary
+```
+
+## Step 15
+
+Who was the fast athlete at the end of pre-season.
+
+```{r fastest athletes, echo= FALSE}
+sprint_summary %>%
+   arrange(best_time_post) # sort by best_time_post
+
+
+```
+
+## Step 16
+
+Create a new variable *best_time_diff*
+Basde it on the difference in each athlete's best time from pre-sesson to post-preseason 
+
+``` {r difference in times pre_post season}
+
+sprint_summary <- sprint_summary %>%
+  mutate(best_time_diff = best_time_post - best_time_pre) %>%
+  arrange(athlete)
+  
+sprint_summary
+
+```
+
+## Step 17
+
+Reading in Yo yo data
+
+```{r readingin}
+library(readxl)
+yyir <- read_excel("data/yyir.xlsx")
+yyir
+```
+
+## Step 18
+
+Combine sprint_summary and yyir objects.
+Call it testing
+
+```{R combine}
+testing <- full_join(x = sprint_summary, y = yyir,
+                     by = "athlete")
+testing
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

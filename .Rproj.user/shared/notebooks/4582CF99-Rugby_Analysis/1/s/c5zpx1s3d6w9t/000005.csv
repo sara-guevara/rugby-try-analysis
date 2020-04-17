@@ -1,0 +1,7 @@
+"0","try %>%"
+"0","  count(attacking_team, final_source) %>%"
+"0","  group_by(attacking_team) %>%"
+"0","   mutate(prop = round(prop.table(n), 3)) %>%"
+"0","  ggplot() +"
+"0","  geom_bar(mapping = aes(reorder(attacking_team,prop), y = prop, fill = final_source), stat = ""identity"") +"
+"0","  theme(axis.text.x = element_text(angle = 45))"

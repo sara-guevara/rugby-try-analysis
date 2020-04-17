@@ -1,0 +1,69 @@
+## Applied Data Analysis in Sport 10157
+## Hackathon 1
+## u3023159
+
+df <- read.csv("data/2015-16_wleague_shot-data.csv")
+str(df)
+library(tidyverse)
+
+## Question 21 code goes here
+ggplot(data = df) +
+  geom_bar(mapping = aes(x = outcome, fill = outcome, colour = "black" ), stat = "count")
+
+
+## Question 22 code goes here
+ggplot(data = df, aes(x = outcome, fill = outcome)) +
+  geom_bar(mapping = reorder(outcome, fill = outcome ), fill = "prop")
+           
+## answer for Q 22 
+df %>%
+  count(outcome) %>%
+  mutate(prop = prop.table(n)) %>%
+  ggplot() +
+  geom_bar(mapping = aes(reorder(outcome,prop), y = prop, fill = prop), stat = "identity")
+
+
+## Question 23 code goes here
+df %>%
+  group_by(play_type) %>%
+  ggplot() +
+  geom_boxplot(mapping = aes( x = play_type, y = distance_to_goal, colour = play_type))
+
+##answer 23
+df %>%
+  ggplot(aes(x = play_type, y = distance_to_goal, colour = play_type)) +
+  geom_boxplot(fill = "black")
+
+## Question 24 code goes here
+
+df %>%
+  group_by(outcome)%>%
+  summarise(mean_distance = mean(distance_to_goal),
+            sd_disance = sd(distance_to_goal))
+
+
+## Question 25 code goes here
+
+df %>%
+  filter(attacking_team == "Canberra") %>%
+  mutate(goal = if_else(outcome == "Goal", true = "Goal", false != "Goal")) %>%
+  ggplot(mapping = aes(x = x_axis, y = y_axis), colour = goal) +
+  geom_point(size = 2)
+
+##answer 25
+df %>%
+  filter(attacking_team == "Canberra") %>%
+  mutate(goal = if_else(outcome =="Goal", "yes", "no")) %>%
+  ggplot(aes(x = x_axis, y = y_axis, colour = goal)) +
+  geom_point() +
+  xlim(c(0,110)) +
+  ylim(c(0,65))
+  
+## Question 26 code goes here
+
+df %>%
+  filter(attacking_team =="Canberra" | attacking_team == "Sydney" |attacking_team == "Brisbane") %>%
+  ggplot() +
+  geom_density(aes(x = game_time, y = ..density.., colour = attacking_team, fill = attacking_team), alpha = 0.2)
+  
+  

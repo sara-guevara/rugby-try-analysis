@@ -1,0 +1,4 @@
+"0","try %>%"
+"0","  filter(attacking_team ==""Hurricanes"" | attacking_team == ""Lions"" |attacking_team == ""Crusaders"") %>%"
+"0","  ggplot() +"
+"0","  geom_density(aes(x = game_time, y = ..density.., colour = attacking_team, fill = attacking_team), alpha = 0.2)"

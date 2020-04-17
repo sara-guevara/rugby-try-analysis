@@ -1,0 +1,8 @@
+"0","try %>%"
+"0","  group_by(attacking_team) %>%"
+"0","  summarise("
+"0","    mn_from_source = mean(time_from_source), "
+"0","    sd_from_source = sd(time_from_source),"
+"0","    mn_game_time = mean(game_time),"
+"0","    sd_game_time = sd(game_time),"
+"0","    count = n())"

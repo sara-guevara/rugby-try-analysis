@@ -2,29 +2,188 @@
 title: "Rugby Analysis"
 author: "Sara G"
 date: "16/04/2020"
-output: html_document
+output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+## Step 1
+
+Loading tidyverse
+
+```{r packages, echo= FALSE}
+library(tidyverse)
+
 ```
 
-## R Markdown
+## Step 2
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Calling the data file Sprint
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r read_data, message=TRUE} 
+try <- read.csv("data/2017_super-rugby_try-source-data.csv")
+str(try)
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+## Step 3
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+Looking for missing data
+
+```{r searching_na} 
+try <- read.csv("data/2017_super-rugby_try-source-data.csv", 
+                na.strings = "")
+str(try)
+
 ```
+
+## Step 4
+
+First 6 rows
+
+```{r head}
+knitr::kable(try)
+```
+
+## Step 5
+
+Last 6 rows
+
+```{r tail}
+tail(try)
+```
+
+
+
+## Step 6
+
+Are there any NAs
+
+```{r na} 
+sum(is.na(try))
+```
+
+
+## Step 7
+
+Visualise data Attacking Team and Final Source
+
+```{r Barplot_final_source}
+try %>%
+  count(attacking_team, final_source) %>%
+  group_by(attacking_team) %>%
+   mutate(prop = round(prop.table(n), 3)) %>%
+  ggplot() +
+  geom_bar(mapping = aes(reorder(attacking_team,prop), y = prop, fill = final_source), stat = "identity") +
+  theme(axis.text.x = element_text(angle = 45))
+
+
+```
+
+## Step 8
+
+Visualise data Attacking Team and Try Source
+
+```{r Barplot_try_source}
+try %>%
+  count(attacking_team, try_source) %>%
+  group_by(attacking_team) %>%
+   mutate(prop = round(prop.table(n), 3)) %>%
+  ggplot() +
+  geom_bar(mapping = aes(reorder(attacking_team,prop), y = prop, fill = try_source), stat = "identity") +
+  theme(axis.text.x = element_text(angle = 45))
+
+
+```
+
+
+## Step 9
+
+Visualise data Attacking Team and possession Zone
+
+
+
+```{r Barplot}
+try %>%
+  count(attacking_team, possession_zone) %>%
+  group_by(attacking_team) %>%
+   mutate(prop = round(prop.table(n), 3)) %>%
+  ggplot() +
+  geom_bar(mapping = aes(reorder(attacking_team,prop), y = prop, fill = possession_zone), stat = "identity", position = "dodge") +
+  theme(axis.text.x = element_text(angle = 45))
+
+
+```
+
+
+## Step 10
+
+Histogram of time from possession to scoring the try
+
+```{r Histogram}
+try %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = time_from_source), colour = "black", fill = "turquoise")
+
+```
+
+## Frequency Polygon
+
+with try source
+
+```{r frequency_polygon_try_source}
+try %>%
+  ggplot() +
+  geom_freqpoly(aes(x = time_from_source, colour = try_source))
+
+```
+
+## Frequency Polygon
+
+with possession source
+
+```{r frequency_polygon_possision_zone}
+try %>%
+  ggplot() +
+  geom_freqpoly(aes(x = time_from_source, colour = possession_zone))
+
+```
+
+## Who scored the most amount of tries
+
+```{r most_trys}
+try %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = attacking_team), stat = "count") +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+
+## Density Plot
+
+```{r Density_Plot}
+try %>%
+  filter(attacking_team =="Hurricanes" | attacking_team == "Lions" |attacking_team == "Crusaders") %>%
+  ggplot() +
+  geom_density(aes(x = game_time, y = ..density.., colour = attacking_team, fill = attacking_team), alpha = 0.2)
+  
+```
+
+```{r summarising}
+try %>%
+  group_by(attacking_team) %>%
+  summarise(
+    mn_from_source = mean(time_from_source), 
+    sd_from_source = sd(time_from_source),
+    mn_game_time = mean(game_time),
+    sd_game_time = sd(game_time),
+    count = n())
+
+
+```
+
+
+
+rmarkdown::render("Rugby_Analysis.Rmd")
+
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

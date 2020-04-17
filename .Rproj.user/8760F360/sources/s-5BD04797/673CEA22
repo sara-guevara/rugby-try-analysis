@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1587024190720.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "673CEA22",
+    "lastKnownWriteTime" : 1585267389,
+    "last_content_update" : 1585267389,
+    "path" : "H:/My Documents/UC-PhD/Uni PhD/PhD Subjects/R Data Analysis/R Week 6/Tidying, transforming and combining data.rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "142,0",
+        "scrollLine" : "133"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

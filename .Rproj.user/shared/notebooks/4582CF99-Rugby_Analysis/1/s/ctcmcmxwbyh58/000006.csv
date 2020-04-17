@@ -1,0 +1,4 @@
+"0","try %>%"
+"0","  ggplot() +"
+"0","  geom_bar(mapping = aes(x = attacking_team), stat = ""count"") +"
+"0","  theme(axis.text.x = element_text(angle = 45))"
